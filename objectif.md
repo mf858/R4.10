@@ -4,6 +4,15 @@
 sur le travail
 sur le professionnalisme (retard = sanction)
 
+
+## consigne 
+#### faire une base de données à partir des sources : 10points
+#### utiliser les données (libre) + professionnalisme : 10 points 
+
+garder l'ordre des auteurs
+
+
+
 ## objectif
 1. extraire les données de DBLP lorent D'Orazio (10 articles ça suffi)
 2. transformer et nettoyer les données
@@ -36,11 +45,6 @@ carte avec les labo/arrticles
 faire un lien avec les données linkedin
 
 
-## consigne 
-### faire une base de données à partir des sources : 10points
-### utiliser les données (libre) + professionnalisme : 10 points 
-
-garder l'ordre des auteurs
 
 
 ## lien utile
