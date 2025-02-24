@@ -3,11 +3,16 @@
 ## note
 sur le travail
 sur le professionnalisme (retard = sanction)
-
+#### rapport technique 1/3
+#### soutenance 1/3
+#### code, realisation 1/3
 
 ## consigne 
-#### faire une base de données à partir des sources : 10points
-#### utiliser les données (libre) + professionnalisme : 10 points 
+#### faire une base de données à partir des sources 
+#### utiliser les données (libre) + professionnalisme 
+
+#### rapport technique 
+#### soutenance
 
 garder l'ordre des auteurs
 
