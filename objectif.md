@@ -5,22 +5,43 @@ sur le travail
 sur le professionnalisme (retard = sanction)
 
 ## objectif
-1. extraire les données de DBLP lorent D'Orazio
+1. extraire les données de DBLP lorent D'Orazio (10 articles ça suffi)
 2. transformer et nettoyer les données
 3. faire le lien entre les données
-### technique
-    api dblp
-    interactif et horsligne
 
+
+
+### technique
+api dblp
+interactif et horsligne$
+api linkedin
+postgre sql
+php
+chat gpt
 
 
 ## projet posssible 
 
-faire un lien avec les données linkedin
-etude par pays, université, laboratoire, genre
-carte avec les labo/arrticles
+etude par pays, domaine, université, laboratoire, genre
+info chercheur (ex: contact)
+
 qui à travaillé avec qui
+
 chercheur vivant ou non
-domaine de travail des chercheusrs
+domaine de travail des chercheurs
 . on rente un domaine --> liste de contacte
 
+carte avec les labo/arrticles
+
+faire un lien avec les données linkedin
+
+
+## consigne 
+### faire une base de données à partir des sources : 10points
+### utiliser les données (libre) + professionnalisme : 10 points 
+
+garder l'ordre des auteurs
+
+
+## lien utile
+https://dblp.org/faq/How+to+use+the+dblp+search+API.html
