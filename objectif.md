@@ -60,3 +60,7 @@ https://dblp.org/faq/How+to+use+the+dblp+search+API.html
     148.60.237.2
     5432
     pg_<login>
+
+### gpt
+    
+https://chatgpt.com/g/g-n7Rs0IK86-grimoire/c/67c55e56-9bf0-8008-8fd7-6b33994ad579
