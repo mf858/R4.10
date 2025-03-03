@@ -11,9 +11,6 @@ CREATE TABLE publications (
     year INT,
     type VARCHAR(200),
     access VARCHAR(50),
-    publication_key VARCHAR(255),
-    doi VARCHAR(255),
-    ee VARCHAR(500),
     url VARCHAR(500)
 );
 
