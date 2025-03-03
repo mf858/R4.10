@@ -6,8 +6,6 @@ CREATE TABLE publications (
     id INT PRIMARY KEY,
     score INT,
     title VARCHAR(1000),
-    venue VARCHAR(500),
-    pages VARCHAR(100),
     year INT,
     type VARCHAR(200),
     access VARCHAR(50),
