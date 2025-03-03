@@ -1,0 +1,33 @@
+CREATE DATABASE publications_db;
+USE publications_db;
+
+-- Table des publications
+CREATE TABLE publications (
+    id INT PRIMARY KEY,
+    score INT,
+    title VARCHAR(1000),
+    venue VARCHAR(500),
+    pages VARCHAR(100),
+    year INT,
+    type VARCHAR(200),
+    access VARCHAR(50),
+    publication_key VARCHAR(255),
+    doi VARCHAR(255),
+    ee VARCHAR(500),
+    url VARCHAR(500)
+);
+
+-- Table des auteurs
+CREATE TABLE authors (
+    pid VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255)
+);
+
+-- Table intermédiaire pour la relation many-to-many entre publications et auteurs
+CREATE TABLE publication_authors (
+    publication_id INT,
+    author_pid VARCHAR(50),
+    FOREIGN KEY (publication_id) REFERENCES publications(id),
+    FOREIGN KEY (author_pid) REFERENCES authors(pid),
+    PRIMARY KEY (publication_id, author_pid)
+);
