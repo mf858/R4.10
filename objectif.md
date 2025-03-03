@@ -54,3 +54,9 @@ faire un lien avec les données linkedin
 
 ## lien utile
 https://dblp.org/faq/How+to+use+the+dblp+search+API.html
+
+
+### serveur
+    148.60.237.2
+    5432
+    pg_<login>
