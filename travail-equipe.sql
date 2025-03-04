@@ -1,6 +1,6 @@
-DROP SCHEMA IF EXISTS "analyse" CASCADE;
-CREATE SCHEMA "analyse";
-SET SCHEMA 'analyse';
+DROP SCHEMA IF EXISTS "groupes" CASCADE;
+CREATE SCHEMA "groupes";
+SET SCHEMA 'groupes';
 
 CREATE TABLE auteurs(
   pid INT PRIMARY KEY,
