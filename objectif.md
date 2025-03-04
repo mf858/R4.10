@@ -19,7 +19,7 @@ garder l'ordre des auteurs
 
 
 ## objectif
-1. extraire les données de DBLP lorent D'Orazio (10 articles ça suffi)
+1. extraire les données de DBLP lorent D'Orazio (10 articles ça suffisent)
 2. transformer et nettoyer les données
 3. faire le lien entre les données
 
