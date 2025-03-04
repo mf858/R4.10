@@ -2,9 +2,9 @@
 
 // Informations de connexion
 $host = 'localhost';  // Adresse du serveur
-$dbname = 'nom_de_la_base'; // Nom de la base de données
+$dbname = 'postgres'; // Nom de la base de données
 $username = 'postgres'; // Nom d'utilisateur PostgreSQL
-$password = 'mot_de_passe'; // Mot de passe
+$password = ''; // Mot de passe
 $port = 5432; // Port par défaut de PostgreSQL
 
 try {
@@ -32,22 +32,29 @@ try {
         $id = $data[$i]["@id"];
         $score = $data[$i]["@score"];
         $titre = $data[$i]["info"]["title"];
-        $lieux = $data[$i]["info"]["venue"];
+        $lieu = $data[$i]["info"]["venue"];
         $annee = $data[$i]["info"]["year"];
         $format = $data[$i]["info"]["type"];
         $acces = $data[$i]["info"]["access"];
 
 
-        $stmt = $pdo->prepare("insert into analyse.publications(id, score, titre, lieux, annee, acces, format, url
-                            values(:id, :score, :titre, :lieux, :annee, :acces, :format, :url");
+        $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url)
+                            values(:id, :score, :titre, :lieu, :annee, :acces, :format, :url)");
         $stmt->bindParam(':id',$id);
         $stmt->bindParam(':score',$score);
         $stmt->bindParam(':titre',$titre);
-        $stmt->bindParam(':lieux',$lieux);
+        $stmt->bindParam(':lieu',$lieu);
         $stmt->bindParam(':annee',$annee);
         $stmt->bindParam(':format',$format);
         $stmt->bindParam(':acces',$access);
         $stmt->bindParam(':url',$url);
+
+        try {
+            $stmt->execute();
+            echo "Données insérées pour l'ID : $id<br>";
+        } catch (PDOException $e) {
+            echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+        }
 
 
     }

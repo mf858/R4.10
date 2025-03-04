@@ -1,5 +1,5 @@
-DROP SCHEMA IF EXISTS "groupes" CASCADE;
-CREATE SCHEMA "groupes";
+DROP SCHEMA IF EXISTS groupes CASCADE;
+CREATE SCHEMA groupes;
 SET SCHEMA 'groupes';
 
 CREATE TABLE auteurs(
