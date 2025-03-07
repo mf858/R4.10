@@ -3,7 +3,7 @@ CREATE SCHEMA groupes;
 SET SCHEMA 'groupes';
 
 CREATE TABLE auteurs(
-  pid INT PRIMARY KEY,
+  pid varchar(50) PRIMARY KEY,
   nom VARCHAR(255)
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE publications (
 
 CREATE TABLE publication_auteurs (
     publication_id INT,
-    auteur_pid INT,
+    auteur_pid varchar(50),
     FOREIGN KEY (publication_id) REFERENCES publications(id),
     FOREIGN KEY (auteur_pid) REFERENCES auteurs(pid),
     PRIMARY KEY (publication_id, auteur_pid)

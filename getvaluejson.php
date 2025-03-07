@@ -5,6 +5,8 @@ require_once("db_connection.php");
     $decoded_data = json_decode($file, true);
     $data = $decoded_data["result"]["hits"]["hit"];
 
+    $pid_auteurs = [];
+
     for($i = 0; $i < sizeof($data); $i++){
         //echo "<pre>";
         //print_r($data[$i]["info"]["title"]);
@@ -17,6 +19,7 @@ require_once("db_connection.php");
         $format = $data[$i]["info"]["type"];
         $acces = $data[$i]["info"]["access"];
         $url = $data[$i]["info"]["url"];
+        $auteurs = $data[$i]["info"]["authors"]["author"];
 
 
         $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url)
@@ -37,7 +40,22 @@ require_once("db_connection.php");
             echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
         }
 
-
+        foreach($auteurs as $auth){
+            if(in_array($auth["@pid"],$pid_auteurs) == false){
+                $stmt = $pdo->prepare("insert into groupes.auteurs(pid, nom)
+                                values(:pid, :nom)");
+                $stmt->bindParam(':pid',$auth["@pid"]);
+                $stmt->bindParam(':nom',$auth["text"]);
+    
+                try {
+                    $stmt->execute();
+    
+                } catch (PDOException $e) {
+                    echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+                }
+            }
+            array_push($pid_auteurs,$auth["@pid"]);
+        }
     }
 
 
