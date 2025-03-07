@@ -18,62 +18,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications avec Auteurs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #ffe6f0; /* Rose pâle */
-        }
-        h2 {
-            text-align: center;
-            color: #E91E63; /* Rose vif */
-        }
-        #search {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #E91E63;
-            border-radius: 5px;
-            outline: none;
-            font-size: 16px;
-        }
-        #search:focus {
-            border-color: #4CAF50;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background: #E91E63; /* Rose vif */
-            color: white;
-            cursor: pointer;
-        }
-        th:hover {
-            background: #D81B60;
-        }
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        tr:hover {
-            background: #C8E6C9; /* Vert clair */
-        }
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            color: #388E3C;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
+    
 </head>
 <body>
 
