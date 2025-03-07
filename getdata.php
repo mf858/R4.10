@@ -1,16 +1,17 @@
-<!-- <?php
-$data = file_get_contents("https://dblp.org/search/publ/api?q=a&h=100&format=json");
-    
-file_put_contents("data.json",$data);
-?>
-<pre>
-    <?php echo $data ?>
-</pre> -->
-
 <?php
 require_once("db_connection.php");
 
-$stmt = $pdo->prepare("SELECT * FROM groupes.publications");
+// Requête pour récupérer les publications avec leurs auteurs associés
+$query = "
+    SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url, 
+           STRING_AGG(a.nom, ', ') AS auteurs
+    FROM groupes.publications p
+    LEFT JOIN groupes.publication_auteurs pa ON p.id = pa.publication_id
+    LEFT JOIN groupes.auteurs a ON pa.auteur_pid = a.pid
+    GROUP BY p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url
+";
+
+$stmt = $pdo->prepare($query);
 $stmt->execute();
 $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -20,7 +21,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publications</title>
+    <title>Publications avec Auteurs</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -80,9 +81,9 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-<h2>Liste des Publications</h2>
+<h2>Liste des Publications avec Auteurs</h2>
 
-<input type="text" id="search" placeholder="Rechercher un titre..." onkeyup="searchTable()">
+<input type="text" id="search" placeholder="Rechercher un titre ou un auteur..." onkeyup="searchTable()">
 
 <table id="publicationsTable">
     <thead>
@@ -94,7 +95,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th onclick="sortTable(4)">Année</th>
             <th onclick="sortTable(5)">Accès</th>
             <th onclick="sortTable(6)">Format</th>
-            <th onclick="sortTable(7)">Lien</th>
+            <th onclick="sortTable(7)">Auteurs</th>
+            <th onclick="sortTable(8)">Lien</th>
         </tr>
     </thead>
     <tbody>
@@ -107,6 +109,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($row['annee']) ?></td>
                 <td><?= htmlspecialchars($row['acces']) ?></td>
                 <td><?= htmlspecialchars($row['format']) ?></td>
+                <td><?= htmlspecialchars($row['auteurs'] ?? 'Aucun auteur') ?></td>
                 <td><a href="<?= htmlspecialchars($row['url']) ?>" target="_blank">Voir</a></td>
             </tr>
         <?php endforeach; ?>
@@ -121,7 +124,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         rows.forEach(row => {
             let titre = row.cells[2].textContent.toLowerCase();
-            row.style.display = titre.includes(input) ? "" : "none";
+            let auteurs = row.cells[7].textContent.toLowerCase();
+            row.style.display = (titre.includes(input) || auteurs.includes(input)) ? "" : "none";
         });
     }
 
