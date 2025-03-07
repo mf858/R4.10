@@ -53,8 +53,20 @@ require_once("db_connection.php");
                 } catch (PDOException $e) {
                     echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
                 }
+                
+                $stmt = $pdo->prepare("insert into groupes.publication_auteurs(publication_id, auteur_pid)
+                values(:publication_id, :auteur_pid)");
+                $stmt->bindParam(':publication_id',$id);
+                $stmt->bindParam(':auteur_pid',$auth["@pid"]);
+                
+                try {
+                    $stmt->execute();
+                    
+                } catch (PDOException $e) {
+                    echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+                }
             }
-            array_push($pid_auteurs,$auth["@pid"]);
+                array_push($pid_auteurs,$auth["@pid"]);
         }
     }
 
