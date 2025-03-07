@@ -31,7 +31,7 @@ interactif et horsligne$
 api linkedin
 postgre sql
 php
-chat gpt
+chat gpt et API
 
 
 ## projet posssible 
@@ -48,6 +48,8 @@ domaine de travail des chercheurs
 carte avec les labo/arrticles
 
 faire un lien avec les données linkedin
+
+affichage des données sur un format graphique
 
 
 
