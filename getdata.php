@@ -1,10 +1,10 @@
 <?php
 require_once("db_connection.php");
 
-// Requête pour récupérer les publications avec leurs auteurs associés
+// Requête pour récupérer les publications avec leurs auteurs
 $query = "
     SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url, 
-           STRING_AGG(a.nom, ', ') AS auteurs
+           STRING_AGG(a.nom || '|' || a.pid, ', ') AS auteurs
     FROM groupes.publications p
     LEFT JOIN groupes.publication_auteurs pa ON p.id = pa.publication_id
     LEFT JOIN groupes.auteurs a ON pa.auteur_pid = a.pid
@@ -22,85 +22,29 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications avec Auteurs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #ffe6f0; /* Rose pâle */
-        }
-        h2 {
-            text-align: center;
-            color: #E91E63; /* Rose vif */
-        }
-        #search {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 2px solid #E91E63;
-            border-radius: 5px;
-            outline: none;
-            font-size: 16px;
-        }
-        #search:focus {
-            border-color: #4CAF50;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: white;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background: #E91E63; /* Rose vif */
-            color: white;
-            cursor: pointer;
-        }
-        th:hover {
-            background: #D81B60;
-        }
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        tr:hover {
-            background: #C8E6C9; /* Vert clair */
-        }
-        a {
-            color: #4CAF50;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        a:hover {
-            color: #388E3C;
-        }
-    </style>
 </head>
 <body>
 
-<h2>Liste des Publications avec Auteurs</h2>
+<h2>Liste des Publications</h2>
 
-<input type="text" id="search" placeholder="Rechercher un titre ou un auteur..." onkeyup="searchTable()">
-
-<table id="publicationsTable">
+<table border="1">
     <thead>
         <tr>
-            <th onclick="sortTable(0)">ID</th>
-            <th onclick="sortTable(1)">Score</th>
-            <th onclick="sortTable(2)">Titre</th>
-            <th onclick="sortTable(3)">Lieu</th>
-            <th onclick="sortTable(4)">Année</th>
-            <th onclick="sortTable(5)">Accès</th>
-            <th onclick="sortTable(6)">Format</th>
-            <th onclick="sortTable(7)">Auteurs</th>
-            <th onclick="sortTable(8)">Lien</th>
+            <th>ID</th>
+            <th>Score</th>
+            <th>Titre</th>
+            <th>Lieu</th>
+            <th>Année</th>
+            <th>Accès</th>
+            <th>Format</th>
+            <th>Auteurs</th>
+            <th>Lien</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($result as $row): ?>
+        <?php foreach ($result as $row): 
+            $auteurs = explode(", ", $row['auteurs'] ?? 'Aucun auteur');
+            ?>
             <tr>
                 <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['score']) ?></td>
@@ -109,42 +53,21 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($row['annee']) ?></td>
                 <td><?= htmlspecialchars($row['acces']) ?></td>
                 <td><?= htmlspecialchars($row['format']) ?></td>
-                <td><?= htmlspecialchars($row['auteurs'] ?? 'Aucun auteur') ?></td>
+                <td>
+                    <?php foreach ($auteurs as $auteur): 
+                        if ($auteur !== 'Aucun auteur') {
+                            list($nom, $pid) = explode('|', $auteur);
+                            echo "<a href='auteur.php?pid=" . htmlspecialchars($pid) . "'>" . htmlspecialchars($nom) . "</a><br>";
+                        } else {
+                            echo "Aucun auteur";
+                        }
+                    endforeach; ?>
+                </td>
                 <td><a href="<?= htmlspecialchars($row['url']) ?>" target="_blank">Voir</a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
 </table>
-
-<script>
-    // Fonction de recherche
-    function searchTable() {
-        let input = document.getElementById("search").value.toLowerCase();
-        let rows = document.querySelectorAll("#publicationsTable tbody tr");
-
-        rows.forEach(row => {
-            let titre = row.cells[2].textContent.toLowerCase();
-            let auteurs = row.cells[7].textContent.toLowerCase();
-            row.style.display = (titre.includes(input) || auteurs.includes(input)) ? "" : "none";
-        });
-    }
-
-    // Fonction de tri
-    function sortTable(n) {
-        let table = document.getElementById("publicationsTable");
-        let rows = Array.from(table.rows).slice(1);
-        let ascending = table.getAttribute("data-sort") !== "asc";
-
-        rows.sort((rowA, rowB) => {
-            let cellA = rowA.cells[n].textContent.trim();
-            let cellB = rowB.cells[n].textContent.trim();
-            return ascending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
-        });
-
-        rows.forEach(row => table.appendChild(row));
-        table.setAttribute("data-sort", ascending ? "asc" : "desc");
-    }
-</script>
 
 </body>
 </html>
