@@ -1,36 +1,36 @@
 <?php
 require_once("db_connection.php");
 
-// Vérifier si un auteur est demandé
-if (!isset($_GET['pid'])) {
-    die("Auteur non spécifié.");
+// Vérifier si un ID de publication est fourni
+if (!isset($_GET['id'])) {
+    die("Publication non spécifiée.");
 }
 
-$pid = $_GET['pid'];
+$publication_id = $_GET['id'];
 
-// Récupérer les infos de l’auteur
-$query = "SELECT * FROM groupes.auteurs WHERE pid = :pid";
+// Récupérer les infos de la publication
+$query = "SELECT titre FROM groupes.publications WHERE id = :id";
 $stmt = $pdo->prepare($query);
-$stmt->bindParam(':pid', $pid);
+$stmt->bindParam(':id', $publication_id);
 $stmt->execute();
-$auteur = $stmt->fetch(PDO::FETCH_ASSOC);
+$publication = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Vérifier si l’auteur existe
-if (!$auteur) {
-    die("Auteur non trouvé.");
+// Vérifier si la publication existe
+if (!$publication) {
+    die("Publication non trouvée.");
 }
 
-// Récupérer les publications associées
+// Récupérer les auteurs de cette publication
 $query = "
-    SELECT p.id, p.titre, p.annee, p.url 
-    FROM groupes.publications p
-    INNER JOIN groupes.publication_auteurs pa ON p.id = pa.publication_id
-    WHERE pa.auteur_pid = :pid
+    SELECT a.pid, a.nom 
+    FROM groupes.auteurs a
+    INNER JOIN groupes.publication_auteurs pa ON a.pid = pa.auteur_pid
+    WHERE pa.publication_id = :id
 ";
 $stmt = $pdo->prepare($query);
-$stmt->bindParam(':pid', $pid);
+$stmt->bindParam(':id', $publication_id);
 $stmt->execute();
-$publications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -38,25 +38,24 @@ $publications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détails Auteur - <?= htmlspecialchars($auteur['nom']) ?></title>
+    <title>Auteurs de <?= htmlspecialchars($publication['titre']) ?></title>
 </head>
 <body>
 
-<h2>Détails de l'Auteur</h2>
-<p><strong>Nom :</strong> <?= htmlspecialchars($auteur['nom']) ?></p>
-<p><strong>ID :</strong> <?= htmlspecialchars($auteur['pid']) ?></p>
+<h2>Auteurs de : <?= htmlspecialchars($publication['titre']) ?></h2>
 
-<h3>Publications de cet Auteur</h3>
-<?php if (count($publications) > 0): ?>
+<?php if (count($auteurs) > 0): ?>
     <ul>
-        <?php foreach ($publications as $pub): ?>
+        <?php foreach ($auteurs as $auteur): ?>
             <li>
-                <a href="<?= htmlspecialchars($pub['url']) ?>" target="_blank"><?= htmlspecialchars($pub['titre']) ?></a> (<?= htmlspecialchars($pub['annee']) ?>)
+                <a href="auteur.php?pid=<?= htmlspecialchars($auteur['pid']) ?>">
+                    <?= htmlspecialchars($auteur['nom']) ?>
+                </a>
             </li>
         <?php endforeach; ?>
     </ul>
 <?php else: ?>
-    <p>Aucune publication trouvée pour cet auteur.</p>
+    <p>Aucun auteur trouvé pour cette publication.</p>
 <?php endif; ?>
 
 <a href="index.php">Retour à la liste des publications</a>
