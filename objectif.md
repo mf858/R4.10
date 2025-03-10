@@ -42,8 +42,8 @@ info chercheur (ex: contact)
 qui à travaillé avec qui
 
 chercheur vivant ou non
-domaine de travail des chercheurs
-. on rente un domaine --> liste de contacte
+**domaine de travail des chercheurs**
+. **on rente un domaine --> liste de contacte**
 
 carte avec les labo/arrticles
 
@@ -66,3 +66,13 @@ https://dblp.org/faq/How+to+use+the+dblp+search+API.html
 ### gpt
     
 https://chatgpt.com/g/g-n7Rs0IK86-grimoire/c/67c55e56-9bf0-8008-8fd7-6b33994ad579
+
+
+
+
+
+
+## à faire
+
+
+trad ,venue -> domaine
