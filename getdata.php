@@ -18,7 +18,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications avec Auteurs</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     
 </head>
 <body>
@@ -52,7 +52,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($row['acces']) ?></td>
                 <td><?= htmlspecialchars($row['format']) ?></td>
                 <td>
-                    <a href="auteurs.php?id=<?= htmlspecialchars($row['id']) ?>">Voir les auteurs</a>
+                    <a href="auteur.php?id=<?= htmlspecialchars($row['id']) ?>">Voir les auteurs</a>
                 </td>
                 <td><a href="<?= htmlspecialchars($row['url']) ?>" target="_blank">Voir</a></td>
             </tr>
