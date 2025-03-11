@@ -51,9 +51,6 @@ faire un lien avec les données linkedin
 
 affichage des données sur un format graphique
 
-
-
-
 ## lien utile
 https://dblp.org/faq/How+to+use+the+dblp+search+API.html
 
@@ -64,15 +61,9 @@ https://dblp.org/faq/How+to+use+the+dblp+search+API.html
     pg_<login>
 
 ### gpt
-    
+
 https://chatgpt.com/g/g-n7Rs0IK86-grimoire/c/67c55e56-9bf0-8008-8fd7-6b33994ad579
 
-
-
-
-
-
 ## à faire
-
 
 trad ,venue -> domaine
