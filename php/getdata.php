@@ -1,6 +1,21 @@
 <?php
 require_once("db_connection.php");
 
+function get_domain($text){
+    $mots_json = file_get_contents("../json/mots.json");
+    $mots = json_decode($mots_json,true); 
+    $domains = $mots["domains"];
+    foreach($domains as $domain){
+        $liste_mots = $domain["keywords"];
+        foreach($liste_mots as $liste){
+            if(str_contains($text,$liste)){
+                return $domain["name"];
+            }
+        }
+    }
+    return "Aucun domaine trouvé";
+}
+
 // Requête pour récupérer les publications
 $query = "
     SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url
@@ -18,7 +33,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications avec Auteurs</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     
 </head>
 <body>
@@ -33,6 +48,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <th>ID</th>
             <th>Score</th>
             <th>Titre</th>
+            <th>Domaine</th>
             <th>Lieu</th>
             <th>Année</th>
             <th>Accès</th>
@@ -47,6 +63,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['score']) ?></td>
                 <td><?= htmlspecialchars($row['titre']) ?></td>
+                <td><?= htmlspecialchars(get_domain($row['titre'])) ?></td>
                 <td><?= htmlspecialchars($row['lieu']) ?></td>
                 <td><?= htmlspecialchars($row['annee']) ?></td>
                 <td><?= htmlspecialchars($row['acces']) ?></td>
