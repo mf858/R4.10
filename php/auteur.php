@@ -34,6 +34,7 @@ if(isset($publication_id)){
 }
 $stmt->execute();
 $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//print_r($auteurs);
 ?>
 
 <!DOCTYPE html>
@@ -41,23 +42,24 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../style.css">
     <title>Auteurs de <?= htmlspecialchars($publication['titre']) ?></title>
 </head>
 <body>
 
 <h2>Auteurs de : <?= htmlspecialchars($publication['titre']) ?></h2>
 <table>
-    <th>
-        <td>Nom</td>
-        <td>lien DBLP</td>
-    </th>
+    <tr>
+        <thead>     
+            <th>Nom</th>
+            <th>lien DBLP</th>
+        </thead>
+    </tr>
 <?php if (count($auteurs) > 0): ?>
     <?php foreach ($auteurs as $auteur): ?>
         <tr>
-            <td><?php $auteur['nom'] ?></td>
-            <td><a href="https://www.dblp.org/"> <!-- A finir -->
-        </tr>
+            <td><?php echo $auteur['nom'] ?></td>
+            <td><a href="https://www.dblp.org/pid/<?php echo $auteur['pid'] ?>">Lien</a></td>
     <?php endforeach; ?>
 </table>
 <?php else: ?>

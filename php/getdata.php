@@ -16,6 +16,39 @@ function get_domain($text){
     return "Aucun domaine trouvé";
 }
 
+function requete_openalex(){
+    //prendre les doi du json publ
+
+    $file = file_get_contents("../json/publ.json");
+    $decoded_data = json_decode($file, true);
+    $data = $decoded_data["result"]["hits"]["hit"];
+
+    for($i = 0; $i < sizeof($data); $i++){
+        $doi  = $data[$i]['info']['doi'];
+        
+        $encoded_doi = urlencode($doi);
+        //print_r($encoded_doi);
+        //envoie de la requete à l'api
+        $url = "https://api.openalex.org/works/https://doi.org/" . $encoded_doi;
+        print_r($url);
+        $response = file_get_contents($url);
+        
+        if ($response !== FALSE) {
+            $data = json_decode($response, true);
+            if (isset($data['concepts'])) {
+                foreach ($data['concepts'] as $concept) {
+                    echo "Concept: " . $concept['display_name'] . " (score: " . $concept['score'] . ")" . "\n";
+                }
+            }
+        }
+        echo("</br>");
+        //envoie du resultat à la bdd
+        
+    }
+}
+    
+
+requete_openalex();
 // Requête pour récupérer les publications
 $query = "
     SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url
