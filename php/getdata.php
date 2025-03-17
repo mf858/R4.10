@@ -81,21 +81,19 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     function searchTable() {
-        let inputTitre = document.getElementById("searchTitre").value.toLowerCase();
-        let inputDomaine = document.getElementById("searchDomaine").value.toLowerCase();
+    let inputTitre = document.getElementById("searchTitre").value.toLowerCase();
+    let inputDomaine = document.getElementById("searchDomaine").value.toLowerCase();
 
-        let rows = document.querySelectorAll("#publicationsTable tbody tr");
+    let rows = document.querySelectorAll("#publicationsTable tbody tr");
 
-        rows.forEach(row => {
-            let titre = row.cells[2].textContent.toLowerCase();
-            row.style.display = titre.includes(inputTitre) ? "" : "none";
-        });
+    rows.forEach(row => {
+        let titre = row.cells[2].textContent.toLowerCase();
+        let domaine = row.cells[3].textContent.toLowerCase();
 
-        rows.forEach(row => {
-            let domaine = row.cells[3].textContent.toLowerCase();
-            row.style.display = domaine.includes(inputDomaine) ? "" : "none";
-        });
-    }
+        // Afficher seulement si les deux conditions sont satisfaites
+        row.style.display = (titre.includes(inputTitre) && domaine.includes(inputDomaine)) ? "" : "none";
+    });
+}
 </script>
 
 </body>
