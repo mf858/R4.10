@@ -116,8 +116,8 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         let rows = document.querySelectorAll("#publicationsTable tbody tr");
 
         rows.forEach(row => {
-            let titre = row.cells[2].textContent.toLowerCase();
-            row.style.display = titre.includes(input) ? "" : "none";
+            let domaine = row.cells[3].textContent.toLowerCase();
+            row.style.display = domaine.includes(input) ? "" : "none";
         });
     }
 </script>
