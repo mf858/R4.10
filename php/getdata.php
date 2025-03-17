@@ -23,27 +23,32 @@ function requete_openalex(){
     $decoded_data = json_decode($file, true);
     $data = $decoded_data["result"]["hits"]["hit"];
 
+    //print_r("<pre>".$data."</pre>");
     for($i = 0; $i < sizeof($data); $i++){
-        $doi  = $data[$i]['info']['doi'];
-        
+        $doi  = $data[$i]["info"]["doi"];
+        print_r($data[$i]["info"]["doi"]); 
+    
         $encoded_doi = urlencode($doi);
-        //print_r($encoded_doi);
+        print_r($doi."|".$encoded_doi);
+    
         //envoie de la requete à l'api
         $url = "https://api.openalex.org/works/https://doi.org/" . $encoded_doi;
         print_r($url);
         $response = file_get_contents($url);
-        
+    
+        //print_r($response);
+        /*
         if ($response !== FALSE) {
-            $data = json_decode($response, true);
-            if (isset($data['concepts'])) {
-                foreach ($data['concepts'] as $concept) {
+            $datalex = json_decode($response, true);
+            if (isset($datalex['concepts'])) {
+                foreach ($datalex['concepts'] as $concept) {
                     echo "Concept: " . $concept['display_name'] . " (score: " . $concept['score'] . ")" . "\n";
                 }
             }
-        }
+        }*/
         echo("</br>");
         //envoie du resultat à la bdd
-        
+              
     }
 }
     
