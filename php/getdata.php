@@ -78,7 +78,9 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <h2>Liste des Publications</h2>
 
-<input type="text" id="search" placeholder="Rechercher un titre..." onkeyup="searchTable()">
+<input type="text" class="search" id="searchTitre" placeholder="Rechercher un titre..." onkeyup="searchTable()">
+<input type="text" class="search" id="searchDomaine" placeholder="Rechercher un domaine..." onkeyup="searchTable()">
+
 
 <table id="publicationsTable">
     <thead>
@@ -117,12 +119,21 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
     function searchTable() {
-        let input = document.getElementById("search").value.toLowerCase();
+        let inputTitre = document.getElementById("searchTitre").value.toLowerCase();
+        let inputDomaine = document.getElementById("searchDomaine").value.toLowerCase();
+
         let rows = document.querySelectorAll("#publicationsTable tbody tr");
 
         rows.forEach(row => {
             let titre = row.cells[2].textContent.toLowerCase();
-            row.style.display = titre.includes(input) ? "" : "none";
+            row.style.display = titre.includes(inputTitre) ? "" : "none";
+        });
+
+        let rows = document.querySelectorAll("#publicationsTable tbody tr");
+
+        rows.forEach(row => {
+            let domaine = row.cells[3].textContent.toLowerCase();
+            row.style.display = domaine.includes(inputDomaine) ? "" : "none";
         });
     }
 </script>
