@@ -6,6 +6,7 @@ require_once("db_connection.php");
     $data = $decoded_data["result"]["hits"]["hit"];
 
     $pid_auteurs = [];
+    $j = 0;
 
     for($i = 0; $i < sizeof($data); $i++){
         $id = $data[$i]["@id"];
@@ -35,7 +36,9 @@ require_once("db_connection.php");
             if (isset($datalex['concepts'])) {
                 $domaine = $datalex["concepts"][0]["display_name"];
             }
-        }   
+            $authorship = $datalex["authorships"];
+        }
+        
 
         //insert publications
         $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url, domaine)
@@ -59,10 +62,12 @@ require_once("db_connection.php");
 
         foreach($auteurs as $auth){
             if(in_array($auth["@pid"],$pid_auteurs) == false){
-                $stmt = $pdo->prepare("insert into groupes.auteurs(pid, nom)
-                                values(:pid, :nom)");
+                $stmt = $pdo->prepare("insert into groupes.auteurs(pid, nom, affiliation)
+                                values(:pid, :nom, :affiliation)");
                 $stmt->bindParam(':pid',$auth["@pid"]);
                 $stmt->bindParam(':nom',$auth["text"]);
+                $stmt->bindParam(':affiliation',$authorship[$j]["institutions"][0]["display_name"]);
+                $j++;
     
                 try {
                     $stmt->execute();

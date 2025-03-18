@@ -4,7 +4,8 @@ SET SCHEMA 'groupes';
 
 CREATE TABLE auteurs(
   pid varchar(50) PRIMARY KEY,
-  nom VARCHAR(255)
+  nom VARCHAR(255),
+  affiliation varchar(250)
 );
 
 CREATE TABLE publications (
