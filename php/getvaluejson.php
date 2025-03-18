@@ -33,7 +33,7 @@ require_once("db_connection.php");
         if ($response !== FALSE) {
             $datalex = json_decode($response, true);
             if (isset($datalex['concepts'])) {
-                $domaine = $datalex["concepts"]["display_name"];
+                $domaine = $datalex["concepts"][0]["display_name"];
             }
         }   
 
