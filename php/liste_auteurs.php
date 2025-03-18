@@ -24,6 +24,7 @@
             <th>PID</th>
             <th>Nom</th>
             <th>Lien</th>
+            <th>Linkedin</th>
         </tr>
     </thead>
     <tbody>
@@ -32,6 +33,7 @@
                 <td><?= htmlspecialchars($row['pid']) ?></td>
                 <td><?= htmlspecialchars($row['nom']) ?></td>
                 <td><a href="<?= htmlspecialchars("https://dblp.org/pid/".$row['pid']) ?>" target="_blank">Voir</a></td>
+                <td><a href="<?php echo( "https://www.linkedin.com/search/results/people/?keywords=".urlencode($row['nom']))?></a>></a></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
