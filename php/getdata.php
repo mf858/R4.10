@@ -18,7 +18,7 @@ function get_domain($text){
 
 // Requête pour récupérer les publications
 $query = "
-    SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url
+    SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url, p.domaine
     FROM groupes.publications p
 ";
 
@@ -65,7 +65,7 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($row['id']) ?></td>
                 <td><?= htmlspecialchars($row['score']) ?></td>
                 <td><?= htmlspecialchars($row['titre']) ?></td>
-                <td><?= htmlspecialchars(get_domain($row['titre'])) ?></td>
+                <td><?= htmlspecialchars($row['domaine']) ?></td>
                 <td><?= htmlspecialchars($row['lieu']) ?></td>
                 <td><?= htmlspecialchars($row['annee']) ?></td>
                 <td><?= htmlspecialchars($row['acces']) ?></td>

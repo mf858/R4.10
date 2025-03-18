@@ -33,12 +33,9 @@ require_once("db_connection.php");
         if ($response !== FALSE) {
             $datalex = json_decode($response, true);
             if (isset($datalex['concepts'])) {
-                foreach ($datalex['concepts'] as $concept) {
-                    $domaine = $concept["display_name"];
-                        
-                }
+                $domaine = $concept["display_name"];
             }
-        }
+        }   
 
         //insert publications
         $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url, domaine)
