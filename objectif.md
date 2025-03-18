@@ -64,6 +64,9 @@ affichage des données sur un format graphique
 
 ### gpt
 
+
+https://chatgpt.com/g/g-n7Rs0IK86-grimoire/c/67c55e56-9bf0-8008-8fd7-6b33994ad579
+
 https://chatgpt.com/g/g-n7Rs0IK86-grimoire/c/67c55e56-9bf0-8008-8fd7-6b33994ad579
 
 ## à faire
