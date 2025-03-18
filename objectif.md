@@ -52,9 +52,11 @@ faire un lien avec les données linkedin
 affichage des données sur un format graphique
 
 ## lien utile
-https://dblp.org/faq/How+to+use+the+dblp+search+API.html
-https://www.linkedin.com/pub/dir?firstName=bob&lastName=matre&trk=people-guest_people-search-bar_search-submit
+-   https://dblp.org/faq/How+to+use+the+dblp+search+API.html
 
+-   https://www.linkedin.com/pub/dir?firstName=bob&lastName=matre&trk=people-guest_people-search-bar_search-submit
+
+-   https://www.linkedin.com/search/results/people/?keywords=NOM_DU_PROFIL
 ### serveur
     148.60.237.2
     5432
