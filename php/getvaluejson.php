@@ -15,12 +15,14 @@ require_once("db_connection.php");
         $annee = $data[$i]["info"]["year"];
         $format = $data[$i]["info"]["type"];
         $acces = $data[$i]["info"]["access"];
-        $url = $data[$i]["info"]["url"];
+        $adresse = $data[$i]["info"]["url"];
         $auteurs = $data[$i]["info"]["authors"]["author"];
         $doi = $data[$i]["info"]["doi"];
 
         print_r($doi);
 
+
+        //recherche API
         $encoded_doi = urlencode($doi);
         print_r($encoded_doi);
         $url = "https://api.openalex.org/works/https://doi.org/" . $encoded_doi;
@@ -28,7 +30,6 @@ require_once("db_connection.php");
         $response = file_get_contents($url);
     
         //print_r($response);
-        
         if ($response !== FALSE) {
             $datalex = json_decode($response, true);
             if (isset($datalex['concepts'])) {
@@ -39,7 +40,8 @@ require_once("db_connection.php");
             }
         }
 
-        $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url)
+        //insert publications
+        $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url, domaine)
                             values(:id, :score, :titre, :lieu, :annee, :acces, :format, :url, :domaine)");
         $stmt->bindParam(':id',$id);
         $stmt->bindParam(':score',$score);
@@ -48,7 +50,7 @@ require_once("db_connection.php");
         $stmt->bindParam(':annee',$annee);
         $stmt->bindParam(':format',$format);
         $stmt->bindParam(':acces',$acces);
-        $stmt->bindParam(':url',$url);
+        $stmt->bindParam(':url',$adresse);
         $stmt->bindParam(':domaine',$domaine);
 
         try {
@@ -72,6 +74,8 @@ require_once("db_connection.php");
                     echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
                 }
                 
+
+                //insert publications auteurs
                 $stmt = $pdo->prepare("insert into groupes.publication_auteurs(publication_id, auteur_pid)
                 values(:publication_id, :auteur_pid)");
                 $stmt->bindParam(':publication_id',$id);
