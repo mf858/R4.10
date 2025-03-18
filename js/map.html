@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carte des Institutions</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        #map { height: 600px; width: 100%; }
+    </style>
+</head>
+<body>
+
+<h2>Carte des Institutions des Auteurs</h2>
+<div id="map"></div>
+
+<script>
+    let map = L.map('map').setView([20, 0], 2); // Vue initiale centrée sur le monde
+
+    // Ajouter OpenStreetMap comme fond de carte
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Charger les institutions depuis PHP
+    fetch('get_institutions.php')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(inst => {
+                L.marker([inst.lat, inst.lng])
+                    .addTo(map)
+                    .bindPopup(`<strong>${inst.name}</strong>`);
+            });
+        })
+        .catch(error => console.error('Erreur chargement:', error));
+</script>
+
+</body>
+</html>
