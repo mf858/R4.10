@@ -16,14 +16,14 @@ if(isset($publication_id)){
 // Récupérer les auteurs de cette publication
 if(isset($publication_id)){
     $query = "
-        SELECT a.pid, a.nom 
+        SELECT a.pid, a.nom, a.affiliation
         FROM groupes.auteurs a
         INNER JOIN groupes.publication_auteurs pa ON a.pid = pa.auteur_pid
         WHERE pa.publication_id = :id
     ";
 }else{
     $query = "
-        SELECT a.pid, a.nom 
+        SELECT a.pid, a.nom, a.affiliation
         FROM groupes.auteurs a
         INNER JOIN groupes.publication_auteurs pa ON a.pid = pa.auteur_pid
     ";
@@ -52,6 +52,7 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <tr>
         <thead>     
             <th>Nom</th>
+            <th>Affiliation</th>
             <th>lien DBLP</th>
             <th>Linkedin</th>
         </thead>
@@ -60,6 +61,7 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php foreach ($auteurs as $auteur): ?>
         <tr>
             <td><?php echo $auteur['nom'] ?></td>
+            <td><?php echo $auteur['affiliation'] ?></td>
             <td><a href="https://www.dblp.org/pid/<?php echo $auteur['pid'] ?>">Lien</a></td>
             <td><a href="<?php echo( "https://www.linkedin.com/search/results/people/?keywords=".urlencode($auteur['nom']))?>">linkedin</a></td>
 
