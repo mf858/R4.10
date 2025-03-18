@@ -15,7 +15,8 @@ CREATE TABLE publications (
     annee INT,
     acces VARCHAR(200),
     format VARCHAR(50),
-    url VARCHAR(500)
+    url VARCHAR(500),
+	domaine varchar(500)
 );
 
 CREATE TABLE publication_auteurs (
