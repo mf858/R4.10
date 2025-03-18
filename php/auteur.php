@@ -53,6 +53,7 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <thead>     
             <th>Nom</th>
             <th>lien DBLP</th>
+            <th>Linkedin</th>
         </thead>
     </tr>
 <?php if (count($auteurs) > 0): ?>
@@ -60,6 +61,8 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <td><?php echo $auteur['nom'] ?></td>
             <td><a href="https://www.dblp.org/pid/<?php echo $auteur['pid'] ?>">Lien</a></td>
+            <td><a href="<?php echo( "https://www.linkedin.com/search/results/people/?keywords=".urlencode($row['nom']))?>">linkedin</a></td>
+
     <?php endforeach; ?>
 </table>
 <?php else: ?>
