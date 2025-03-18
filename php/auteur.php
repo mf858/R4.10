@@ -61,7 +61,7 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <tr>
             <td><?php echo $auteur['nom'] ?></td>
             <td><a href="https://www.dblp.org/pid/<?php echo $auteur['pid'] ?>">Lien</a></td>
-            <td><a href="<?php echo( "https://www.linkedin.com/search/results/people/?keywords=".urlencode($row['nom']))?>">linkedin</a></td>
+            <td><a href="<?php echo( "https://www.linkedin.com/search/results/people/?keywords=".urlencode($auteur['nom']))?>">linkedin</a></td>
 
     <?php endforeach; ?>
 </table>
