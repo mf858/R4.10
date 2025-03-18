@@ -48,15 +48,22 @@ chercheur vivant ou non
 carte avec les labo/arrticles
 
 faire un lien avec les données linkedin
+### irrealiste
+avoir une carte avec les institues => nb articlee , nb author
 
-affichage des données sur un format graphique
+
+
 
 ## lien utile
+-   coordonnées : https://nominatim.openstreetmap.org/search?q={$address}&format=json&limit=1
+
 -   https://dblp.org/faq/How+to+use+the+dblp+search+API.html
 
 -   https://www.linkedin.com/pub/dir?firstName=bob&lastName=matre&trk=people-guest_people-search-bar_search-submit
 
 -   https://www.linkedin.com/search/results/people/?keywords=NOM_DU_PROFIL
+
+
 ### serveur
     148.60.237.2
     5432
