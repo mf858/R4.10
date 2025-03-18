@@ -53,7 +53,7 @@ affichage des données sur un format graphique
 
 ## lien utile
 https://dblp.org/faq/How+to+use+the+dblp+search+API.html
-
+https://www.linkedin.com/pub/dir?firstName=bob&lastName=matre&trk=people-guest_people-search-bar_search-submit
 
 ### serveur
     148.60.237.2
