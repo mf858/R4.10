@@ -25,7 +25,7 @@ require_once("db_connection.php");
         //recherche API
         $encoded_doi = urlencode($doi);
         print_r($encoded_doi);
-        $url = "https://api.openalex.org/works/https://doi.org/" . $encoded_doi;
+        $url = "https://api.openalex.org/works/doi:" . $encoded_doi;
         print_r($url);  
         $response = file_get_contents($url);
     
