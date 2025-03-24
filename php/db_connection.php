@@ -2,8 +2,8 @@
     // Informations de connexion
 $host = 'localhost';  // Adresse du serveur
 $dbname = 'postgres'; // Nom de la base de données
-$username = 'postgres'; // Nom d'utilisateur PostgreSQL
-$password = 'Baptiste85'; // Mot de passe
+$username = 'username'; // Nom d'utilisateur PostgreSQL
+$password = 'password'; // Mot de passe
 $port = 5432; // Port par défaut de PostgreSQL
 
 try {
