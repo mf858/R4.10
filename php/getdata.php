@@ -1,30 +1,35 @@
 <?php
-require_once("db_connection.php");
+require_once("db_connection.php"); // Inclusion du fichier de connexion à la base PostgreSQL
 
+/**
+ * Fonction pour obtenir le domaine d'une publication en analysant son titre.
+ */
 function get_domain($text){
+    // Charger le fichier JSON contenant les mots-clés associés aux domaines
     $mots_json = file_get_contents("../json/mots.json");
-    $mots = json_decode($mots_json,true); 
-    $domains = $mots["domains"];
-    foreach($domains as $domain){
-        $liste_mots = $domain["keywords"];
-        foreach($liste_mots as $liste){
+    $mots = json_decode($mots_json,true); // Décoder le JSON en tableau PHP
+    
+    $domains = $mots["domains"]; // Liste des domaines
+    foreach($domains as $domain){ // Parcourir chaque domaine
+        $liste_mots = $domain["keywords"]; // Liste des mots-clés pour ce domaine
+        foreach($liste_mots as $liste){ // Vérifier si un mot-clé est présent dans le texte
             if(str_contains($text,$liste)){
-                return $domain["name"];
+                return $domain["name"]; // Retourner le nom du domaine correspondant
             }
         }
     }
-    return "Aucun domaine trouvé";
+    return "Aucun domaine trouvé"; // Si aucun mot-clé ne correspond
 }
 
-// Requête pour récupérer les publications
+// Requête SQL pour récupérer les publications
 $query = "
     SELECT p.id, p.score, p.titre, p.lieu, p.annee, p.acces, p.format, p.url, p.domaine
     FROM groupes.publications p
 ";
 
-$stmt = $pdo->prepare($query);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt = $pdo->prepare($query); // Préparation de la requête SQL
+$stmt->execute(); // Exécution de la requête
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC); // Récupération des résultats sous forme de tableau associatif
 ?>
 
 <!DOCTYPE html>
@@ -33,17 +38,17 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publications avec Auteurs</title>
-    <link rel="stylesheet" href="../style.css">
-    
+    <link rel="stylesheet" href="../style.css"> <!-- Inclusion du fichier CSS -->
 </head>
 <body>
 
 <h2>Liste des Publications</h2>
 
+<!-- Champs de recherche -->
 <input type="text" class="search" id="searchTitre" placeholder="Rechercher un titre..." onkeyup="searchTable()">
 <input type="text" class="search" id="searchDomaine" placeholder="Rechercher un domaine..." onkeyup="searchTable()">
 
-
+<!-- Table d'affichage des publications -->
 <table id="publicationsTable">
     <thead>
         <tr>
@@ -80,17 +85,20 @@ $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </table>
 
 <script>
-    function searchTable() {
-    let inputTitre = document.getElementById("searchTitre").value.toLowerCase();
-    let inputDomaine = document.getElementById("searchDomaine").value.toLowerCase();
+/**
+ * Fonction de recherche dynamique dans la table
+ */
+function searchTable() {
+    let inputTitre = document.getElementById("searchTitre").value.toLowerCase(); // Récupération du texte de recherche pour le titre
+    let inputDomaine = document.getElementById("searchDomaine").value.toLowerCase(); // Récupération du texte de recherche pour le domaine
 
-    let rows = document.querySelectorAll("#publicationsTable tbody tr");
+    let rows = document.querySelectorAll("#publicationsTable tbody tr"); // Sélection des lignes du tableau
 
     rows.forEach(row => {
-        let titre = row.cells[2].textContent.toLowerCase();
-        let domaine = row.cells[3].textContent.toLowerCase();
+        let titre = row.cells[2].textContent.toLowerCase(); // Récupération du titre
+        let domaine = row.cells[3].textContent.toLowerCase(); // Récupération du domaine
 
-        // Afficher seulement si les deux conditions sont satisfaites
+        // Afficher la ligne si elle correspond aux critères de recherche
         row.style.display = (titre.includes(inputTitre) && domaine.includes(inputDomaine)) ? "" : "none";
     });
 }

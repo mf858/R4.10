@@ -1,97 +1,121 @@
 <?php
-require_once("db_connection.php");
+require_once("db_connection.php"); // Inclusion du fichier de connexion à PostgreSQL
 
-    $file = file_get_contents("../json/publ.json");
-    $decoded_data = json_decode($file, true);
-    $data = $decoded_data["result"]["hits"]["hit"];
+// Charger le fichier JSON contenant les publications
+$file = file_get_contents("../json/publ.json");
+$decoded_data = json_decode($file, true);
+$data = $decoded_data["result"]["hits"]["hit"]; // Accès aux publications dans le JSON
 
-    $pid_auteurs = [];
-    $j = 0;
+$pid_auteurs = []; // Tableau pour stocker les auteurs déjà insérés afin d'éviter les doublons
+$j = 0; // Compteur pour les affiliations des auteurs
 
-    for($i = 0; $i < sizeof($data); $i++){
-        $id = $data[$i]["@id"];
-        $score = $data[$i]["@score"];
-        $titre = $data[$i]["info"]["title"];
-        $lieu = $data[$i]["info"]["venue"];
-        $annee = $data[$i]["info"]["year"];
-        $format = $data[$i]["info"]["type"];
-        $acces = $data[$i]["info"]["access"];
-        $adresse = $data[$i]["info"]["url"];
-        $auteurs = $data[$i]["info"]["authors"]["author"];
-        $doi = $data[$i]["info"]["doi"];
+for ($i = 0; $i < count($data); $i++) {
+    // Récupération des données principales de la publication
+    $id = $data[$i]["@id"];
+    $score = $data[$i]["@score"];
+    $titre = $data[$i]["info"]["title"];
+    $lieu = $data[$i]["info"]["venue"];
+    $annee = $data[$i]["info"]["year"];
+    $format = $data[$i]["info"]["type"];
+    $acces = $data[$i]["info"]["access"];
+    $adresse = $data[$i]["info"]["url"];
+    $auteurs = $data[$i]["info"]["authors"]["author"];
+    $doi = $data[$i]["info"]["doi"];
 
-        print_r($doi);
+    print_r($doi); // Affichage du DOI pour debug
 
+    // Recherche API OpenAlex pour récupérer des informations complémentaires
+    $encoded_doi = urlencode($doi);
+    print_r($encoded_doi);
 
-        //recherche API
-        $encoded_doi = urlencode($doi);
-        print_r($encoded_doi);
-        $url = "https://api.openalex.org/works/doi:" . $encoded_doi;
-        print_r($url);  
-        $response = file_get_contents($url);
+    $url = "https://api.openalex.org/works/doi:" . $encoded_doi;
+    print_r($url);  
     
-        //print_r($response);
-        if ($response !== FALSE) {
-            $datalex = json_decode($response, true);
-            if (isset($datalex['concepts'])) {
-                $domaine = $datalex["concepts"][0]["display_name"];
-            }
-            $authorship = $datalex["authorships"];
-        }
+    $response = @file_get_contents($url); // Utilisation de '@' pour éviter les erreurs fatales si l'API ne répond pas
+
+    $domaine = "Inconnu"; // Valeur par défaut si aucune donnée trouvée
+    $authorship = [];
+
+    if ($response !== FALSE) {
+        $datalex = json_decode($response, true);
         
-
-        //insert publications
-        $stmt = $pdo->prepare("insert into groupes.publications(id, score, titre, lieu, annee, acces, format, url, domaine)
-                            values(:id, :score, :titre, :lieu, :annee, :acces, :format, :url, :domaine)");
-        $stmt->bindParam(':id',$id);
-        $stmt->bindParam(':score',$score);
-        $stmt->bindParam(':titre',$titre);
-        $stmt->bindParam(':lieu',$lieu);
-        $stmt->bindParam(':annee',$annee);
-        $stmt->bindParam(':format',$format);
-        $stmt->bindParam(':acces',$acces);
-        $stmt->bindParam(':url',$adresse);
-        $stmt->bindParam(':domaine',$domaine);
-
-        try {
-            $stmt->execute();
-            echo "Données insérées pour l'ID : $id<br>";
-        } catch (PDOException $e) {
-            echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+        // Vérification si la clé "concepts" existe et récupération du premier concept comme domaine
+        if (isset($datalex['concepts']) && count($datalex['concepts']) > 0) {
+            $domaine = $datalex["concepts"][0]["display_name"];
         }
 
-        foreach($auteurs as $auth){
-            if(in_array($auth["@pid"],$pid_auteurs) == false){
-                $stmt = $pdo->prepare("insert into groupes.auteurs(pid, nom, affiliation)
-                                values(:pid, :nom, :affiliation)");
-                $stmt->bindParam(':pid',$auth["@pid"]);
-                $stmt->bindParam(':nom',$auth["text"]);
-                $stmt->bindParam(':affiliation',$authorship[$j]["institutions"][0]["display_name"]);
-                $j++;
-    
-                try {
-                    $stmt->execute();
-    
-                } catch (PDOException $e) {
-                    echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
-                }
-                
-
-                //insert publications auteurs
-                $stmt = $pdo->prepare("insert into groupes.publication_auteurs(publication_id, auteur_pid)
-                values(:publication_id, :auteur_pid)");
-                $stmt->bindParam(':publication_id',$id);
-                $stmt->bindParam(':auteur_pid',$auth["@pid"]);
-                
-                try {
-                    $stmt->execute();
-                    
-                } catch (PDOException $e) {
-                    echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
-                }
-            }
-                array_push($pid_auteurs,$auth["@pid"]);
+        // Vérification si la clé "authorships" existe et récupération des auteurs
+        if (isset($datalex['authorships'])) {
+            $authorship = $datalex["authorships"];
         }
     }
 
+    // Insertion des données de la publication dans PostgreSQL
+    $stmt = $pdo->prepare("
+        INSERT INTO groupes.publications(id, score, titre, lieu, annee, acces, format, url, domaine)
+        VALUES(:id, :score, :titre, :lieu, :annee, :acces, :format, :url, :domaine)
+    ");
+
+    $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':score', $score);
+    $stmt->bindParam(':titre', $titre);
+    $stmt->bindParam(':lieu', $lieu);
+    $stmt->bindParam(':annee', $annee);
+    $stmt->bindParam(':format', $format);
+    $stmt->bindParam(':acces', $acces);
+    $stmt->bindParam(':url', $adresse);
+    $stmt->bindParam(':domaine', $domaine);
+
+    try {
+        $stmt->execute();
+        echo "✅ Données insérées pour l'ID : $id<br>";
+    } catch (PDOException $e) {
+        echo "❌ Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+    }
+
+    // Parcours des auteurs associés à la publication
+    foreach ($auteurs as $auth) {
+        if (!in_array($auth["@pid"], $pid_auteurs)) { // Vérifier si l'auteur n'a pas déjà été inséré
+            $affiliation = "Inconnu"; // Valeur par défaut
+
+            // Vérification si une affiliation est disponible dans OpenAlex
+            if (isset($authorship[$j]["institutions"][0]["display_name"])) {
+                $affiliation = $authorship[$j]["institutions"][0]["display_name"];
+            }
+
+            // Insertion des auteurs dans PostgreSQL
+            $stmt = $pdo->prepare("
+                INSERT INTO groupes.auteurs(pid, nom, affiliation)
+                VALUES(:pid, :nom, :affiliation)
+            ");
+
+            $stmt->bindParam(':pid', $auth["@pid"]);
+            $stmt->bindParam(':nom', $auth["text"]);
+            $stmt->bindParam(':affiliation', $affiliation);
+            $j++;
+
+            try {
+                $stmt->execute();
+            } catch (PDOException $e) {
+                echo "❌ Erreur lors de l'insertion de l'auteur PID " . $auth["@pid"] . " : " . $e->getMessage() . "<br>";
+            }
+
+            // Insertion de la relation entre publication et auteur
+            $stmt = $pdo->prepare("
+                INSERT INTO groupes.publication_auteurs(publication_id, auteur_pid)
+                VALUES(:publication_id, :auteur_pid)
+            ");
+            $stmt->bindParam(':publication_id', $id);
+            $stmt->bindParam(':auteur_pid', $auth["@pid"]);
+
+            try {
+                $stmt->execute();
+            } catch (PDOException $e) {
+                echo "❌ Erreur lors de l'insertion de la relation publication-auteur pour l'ID $id : " . $e->getMessage() . "<br>";
+            }
+        }
+
+        array_push($pid_auteurs, $auth["@pid"]); // Ajouter l'auteur au tableau pour éviter les doublons
+    }
+}
 ?>
