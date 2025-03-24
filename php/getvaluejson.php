@@ -97,7 +97,7 @@ for ($i = 0; $i < count($data); $i++) {
             try {
                 $stmt->execute();
             } catch (PDOException $e) {
-                echo "❌ Erreur lors de l'insertion de l'auteur PID " . $auth["@pid"] . " : " . $e->getMessage() . "<br>";
+                echo "Erreur lors de l'insertion de l'auteur PID " . $auth["@pid"] . " : " . $e->getMessage() . "<br>";
             }
 
             // Insertion de la relation entre publication et auteur
@@ -111,7 +111,7 @@ for ($i = 0; $i < count($data); $i++) {
             try {
                 $stmt->execute();
             } catch (PDOException $e) {
-                echo "❌ Erreur lors de l'insertion de la relation publication-auteur pour l'ID $id : " . $e->getMessage() . "<br>";
+                echo "Erreur lors de l'insertion de la relation publication-auteur pour l'ID $id : " . $e->getMessage() . "<br>";
             }
         }
 
