@@ -7,7 +7,7 @@ $decoded_data = json_decode($file, true);
 $data = $decoded_data["result"]["hits"]["hit"]; // Accès aux publications dans le JSON
 
 $pid_auteurs = []; // Tableau pour stocker les auteurs 
-$j = 0; // Compteur pour les affiliations des auteurs
+
 
 for ($i = 0; $i < count($data); $i++) {
     $id = $data[$i]["@id"];
@@ -23,10 +23,10 @@ for ($i = 0; $i < count($data); $i++) {
 
     // Recherche API OpenAlex pour récupérer des informations complémentaires
     $encoded_doi = urlencode($doi);
-    print_r($encoded_doi);
+    //print_r($encoded_doi);
 
     $url = "https://api.openalex.org/works/doi:" . $encoded_doi;
-    print_r($url);  
+    //print_r($url);  
     
     $response = file_get_contents($url);
     $domaine = "Inconnu"; // Valeur par défaut
@@ -44,6 +44,9 @@ for ($i = 0; $i < count($data); $i++) {
         if (isset($datalex['authorships'])) {
             $authorship = $datalex["authorships"];
         }
+        //echo "<pre>";
+        //print_r($authorship);
+        //echo "</pre>";
     }
 
     // Insertion des données de la publication dans la base de données
@@ -64,20 +67,20 @@ for ($i = 0; $i < count($data); $i++) {
 
     try {
         $stmt->execute();
-        echo "✅ Données insérées pour l'ID : $id<br>";
+        echo "Données insérées pour l'ID : $id<br>";
     } catch (PDOException $e) {
-        echo "❌ Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
+        echo "Erreur lors de l'insertion de l'ID $id : " . $e->getMessage() . "<br>";
     }
 
     // Parcours des auteurs associés à la publication
+    $j = 0;
     foreach ($auteurs as $auth) {
         if (!in_array($auth["@pid"], $pid_auteurs)) { // Vérifier si l'auteur n'a pas déjà été inséré
             $affiliation = "Inconnu"; // Valeur par défaut
 
-            // Vérification si une affiliation est disponible dans OpenAlex
-            if (isset($authorship[$j]["institutions"][0]["display_name"])) {
-                $affiliation = $authorship[$j]["institutions"][0]["display_name"];
-            }
+            
+            $affiliation = $authorship[$j]["institutions"][0]["display_name"];
+            
 
             // Insertion des auteurs dans PostgreSQL
             $stmt = $pdo->prepare("
@@ -114,4 +117,5 @@ for ($i = 0; $i < count($data); $i++) {
         array_push($pid_auteurs, $auth["@pid"]); // Ajouter l'auteur au tableau pour éviter les doublons
     }
 }
+echo "Fin de l'insertion des données <a href='getdata.php'>Page des articles</a>";
 ?>

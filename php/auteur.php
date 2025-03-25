@@ -88,7 +88,7 @@ $auteurs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </table>
 
 <!-- Lien retour -->
-<a href="index.php">Retour à la liste des publications</a>
+<a href="getdata.php">Retour à la liste des publications</a>
 
 </body>
 </html>
