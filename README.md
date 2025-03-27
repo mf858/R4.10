@@ -9,5 +9,5 @@
 3. Ouvrez un terminal dans le dossier du projet
 4. Lancez un serveur php avec la commande ```php php -S localhost:8888 ```
 5. Dans un navigateur allez à l'adresse : localhost:8888/php/getvaluejson.php
-6. Quand l'importation des données est finit allez à l'adresse : localhsot:8888/php/getdata.php
+6. Quand l'importation des données est terminé allez à l'adresse : localhost:8888/php/getdata.php
 7. Vous pouvez utiliser le site librement
